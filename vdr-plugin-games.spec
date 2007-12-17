@@ -13,7 +13,6 @@ License:	GPL
 URL:		http://1541.org/
 Source:		http://1541.org/public/vdr-%plugin-%version.tar.bz2
 Patch0:		vdr-games-0.6.2-finnish.diff
-BuildRoot:	%{_tmppath}/%{name}-buildroot
 BuildRequires:	vdr-devel >= 1.4.1-6
 Requires:	vdr-abi = %vdr_abi
 
