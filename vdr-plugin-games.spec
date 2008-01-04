@@ -2,7 +2,7 @@
 %define plugin	games
 %define name	vdr-plugin-%plugin
 %define version	0.6.3
-%define rel	13
+%define rel	14
 
 Summary:	VDR plugin: OSD Games Collection
 Name:		%name
