@@ -2,19 +2,21 @@
 %define plugin	games
 %define name	vdr-plugin-%plugin
 %define version	0.6.3
-%define rel	14
+%define rel	15
 
 Summary:	VDR plugin: OSD Games Collection
 Name:		%name
 Version:	%version
 Release:	%mkrel %rel
 Group:		Video
-License:	GPL
+License:	GPL+
 URL:		http://1541.org/
 Source:		http://1541.org/public/vdr-%plugin-%version.tar.bz2
 Patch0:		vdr-games-0.6.2-finnish.diff
+Patch1:		games-02_Makefile-nosilent.dpatch
+Patch2:		games-0.6.3-i18n-1.6.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
-BuildRequires:	vdr-devel >= 1.4.1-6
+BuildRequires:	vdr-devel >= 1.6.0
 Requires:	vdr-abi = %vdr_abi
 
 %description
@@ -25,9 +27,13 @@ Minesweeper, more to come.
 %prep
 %setup -q -n %plugin-%version
 %patch0 -p1 -b .fi
+%patch1 -p1
+%patch2 -p1
+%vdr_plugin_prep
 
 %build
-%vdr_plugin_build libvdr-games.so CFLAGS="%{optflags} -fPIC -I%{_includedir}/vdr" -j1
+VDR_PLUGIN_FLAGS="%{vdr_plugin_flags} -I%{_includedir}/vdr"
+%vdr_plugin_build libvdr-games.so -j1
 
 %install
 rm -rf %{buildroot}
@@ -38,6 +44,6 @@ rm -rf %{buildroot}
 
 %files -f %plugin.vdr
 %defattr(-,root,root)
-%doc README TODO COPYING HISTORY
+%doc README TODO HISTORY
 
 
