@@ -16,7 +16,7 @@ Patch0:		vdr-games-0.6.2-finnish.diff
 Patch1:		games-02_Makefile-nosilent.dpatch
 Patch2:		games-0.6.3-i18n-1.6.patch
 BuildRoot:	%{_tmppath}/%{name}-buildroot
-BuildRequires:	vdr-devel >= 1.6.0
+BuildRequires:	vdr-devel >= 1.6.0-7
 Requires:	vdr-abi = %vdr_abi
 
 %description
@@ -32,7 +32,7 @@ Minesweeper, more to come.
 %vdr_plugin_prep
 
 %build
-VDR_PLUGIN_FLAGS="%{vdr_plugin_flags} -I%{_includedir}/vdr"
+VDR_PLUGIN_EXTRA_FLAGS="-I%{_includedir}/vdr"
 %vdr_plugin_build libvdr-games.so -j1
 
 %install
