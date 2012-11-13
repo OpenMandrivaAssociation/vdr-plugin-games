@@ -1,0 +1,440 @@
+
+This is a semi-automatically created i18n adaptation patch and may contain
+errors (such as missing translations). This should only be used as a
+temporary measure until the upstream plugin maintainer fixes the plugin
+properly according to the instructions in i18n-to-gettext.pl.
+
+Created for Mandriva Linux packaging by Anssi Hannula <anssi@mandriva.org>.
+
+
+Index: games-0.6.3/Makefile
+===================================================================
+--- games-0.6.3/Makefile
++++ games-0.6.3/Makefile	2008-04-23 23:46:12.000000000 +0300
+@@ -54,7 +54,7 @@
+ 
+ endif
+ 
+-all:
++all: i18n
+ 	@echo
+ 	@echo -n "Building $(TARGET) "
+ 	for GAME in $(GAMES); do cd $$GAME; make all; cd -; done
+@@ -63,6 +63,32 @@
+ 	@echo " done"
+ 	@echo
+ 
++### Internationalization (I18N):
++
++PODIR     = po
++LOCALEDIR = $(VDRDIR)/locale
++I18Npo    = $(wildcard $(PODIR)/*.po)
++I18Nmsgs  = $(addprefix $(LOCALEDIR)/, $(addsuffix /LC_MESSAGES/vdr-$(PLUGIN).mo, $(notdir $(foreach file, $(I18Npo), $(basename $(file))))))
++I18Npot   = $(PODIR)/$(PLUGIN).pot
++
++%.mo: %.po
++	msgfmt -c -o $@ $<
++
++$(I18Npot): $(wildcard *.[ch] *.[ch]xx *.cc *.[ch]pp *.hh)
++	xgettext -C -cTRANSLATORS --no-wrap --no-location -k -ktr -ktrNOOP --msgid-bugs-address=http://qa.mandriva.com/ -o $@ $^
++
++%.po: $(I18Npot)
++	msgmerge -U --no-wrap --no-location --backup=none -q $@ $<
++	@touch $@
++
++$(I18Nmsgs): $(LOCALEDIR)/%/LC_MESSAGES/vdr-$(PLUGIN).mo: $(PODIR)/%.mo
++	@mkdir -p $(dir $@)
++	cp $< $@
++
++.PHONY: i18n
++i18n: $(I18Nmsgs)
++
++
+ libvdr-games.so: $(OBJS)
+ 	g++ $(OBJS) $(LFLAGS) $(ARCHIVES) -o $@
+ 	@cp $@ $(LIBDIR)/$@.$(APIVERSION)
+@@ -84,6 +110,7 @@
+ 	@echo
+ 
+ clean:
++	@-rm -f $(PODIR)/*.mo $(PODIR)/*.pot
+ 	@echo
+ 	@echo -n "Cleaning source tree "
+ 	@for GAME in $(GAMES); do cd $$GAME; make clean; cd -; done
+Index: games-0.6.3/gamesi18n.h
+===================================================================
+--- games-0.6.3/gamesi18n.h
++++ games-0.6.3/gamesi18n.h	2008-04-23 23:43:33.000000000 +0300
+@@ -1,227 +0,0 @@
+-/*
+- * i18n.h: A plugin for the Video Disk Recorder
+- *
+- * See the README file for copyright information and how to reach the author.
+- *
+- * $Id: i18n.h,v 1.1 2003/11/11 15:06:58 opj Exp $
+- */
+-
+-#ifndef __GAMES_I18N_H
+-#define __GAMES_I18N_H
+-
+-#include <config.h> // only for VDRVERSNUM
+-#include <i18n.h>
+-
+-const tI18nPhrase Phrases[] =
+-{
+-  { "OSD Games Collection", // English
+-    "", // Deutsch
+-    "", // Slovenski
+-    "", // Italiano
+-    "", // Nederlands
+-    "", // Português
+-    "", // Français
+-    "", // Norsk
+-    "Pelit (OSD)", // suomi
+-    "", // Polski
+-    "", // Español
+-    "", // ÅëëçíéêÜ (Greek)
+-    "", // Svenska
+-    "", // Romaneste
+-    "", // Magyar
+-    "", // Català
+-#if VDRVERSNUM >= 10302
+-    "", // ÀãááÚØÙ (Russian)
+-#if VDRVERSNUM >= 10307
+-    "", // Hrvatski (Croatian)
+-#endif
+-#endif
+-  },
+-  { "Games", // English
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "Pelit", // suomi
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-#if VDRVERSNUM >= 10302
+-    "", // TODO
+-#if VDRVERSNUM >= 10307
+-    "", // TODO
+-#endif
+-#endif
+-  },
+-  { "X Position", // English
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "Vaakasijainti", // suomi
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-#if VDRVERSNUM >= 10302  
+-    "", // TODO               
+-#if VDRVERSNUM >= 10307  
+-    "", // TODO                 
+-#endif  
+-#endif  
+-  },
+-  { "Y Position", // English
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "Pystysijainti", // suomi
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-#if VDRVERSNUM >= 10302  
+-    "", // TODO               
+-#if VDRVERSNUM >= 10307  
+-    "", // TODO                 
+-#endif  
+-#endif  
+-  },
+-  { "Computer Skill", // English
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "Vaikeustaso", // suomi
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-#if VDRVERSNUM >= 10302  
+-    "", // TODO               
+-#if VDRVERSNUM >= 10307  
+-    "", // TODO                 
+-#endif  
+-#endif  
+-  },
+-  { "Key Repeat", // English
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "Näppäimen toisto", // suomi
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-#if VDRVERSNUM >= 10302  
+-    "", // TODO               
+-#if VDRVERSNUM >= 10307  
+-    "", // TODO                 
+-#endif  
+-#endif  
+-  },
+-  { "OSD Size", // English
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "Näytön koko", // suomi
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-#if VDRVERSNUM >= 10302  
+-    "", // TODO               
+-#if VDRVERSNUM >= 10307  
+-    "", // TODO                 
+-#endif  
+-#endif  
+-  },
+-  { "On", // English
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO   
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "päällä", // suomi
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO  
+-    "", // TODO   
+-    "", // TODO
+-    "", // TODO   
+-#if VDRVERSNUM >= 10302  
+-    "", // TODO               
+-#if VDRVERSNUM >= 10307  
+-    "", // TODO                 
+-#endif  
+-#endif  
+-  },
+-  { "Off", // English
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO   
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "pois", // suomi
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO
+-    "", // TODO  
+-    "", // TODO   
+-    "", // TODO
+-    "", // TODO   
+-#if VDRVERSNUM >= 10302  
+-    "", // TODO               
+-#if VDRVERSNUM >= 10307  
+-    "", // TODO                 
+-#endif  
+-#endif  
+-  },
+-  { NULL }
+-};
+-
+-#endif // __GAMES_I18N_H
+Index: games-0.6.3/plugin.cpp
+===================================================================
+--- games-0.6.3/plugin.cpp
++++ games-0.6.3/plugin.cpp	2008-04-23 23:43:33.000000000 +0300
+@@ -1,6 +1,6 @@
+ #include <plugin.h>
+ #include <osd.h>
+-#include "gamesi18n.h"
++
+ 
+ extern int launcher_menu(char ***m);
+ extern int launcher_start(int g, int x, int y, int s, int c);
+@@ -12,7 +12,7 @@
+ class GameSetup;
+ class GamePlugin;
+ 
+-static const char   *DESCRIPTION = "OSD Games Collection";
++static const char   *DESCRIPTION = trNOOP("OSD Games Collection");
+ static const char *MAINMENUENTRY = "Games";
+ 
+ static int  x = -8;    // x position
+@@ -139,7 +139,7 @@
+ 
+ bool
+ GamePlugin::Start(void) {
+-	RegisterI18n(Phrases);
++	
+ 	return true;
+ }
+ 
+Index: games-0.6.3/po/fi_FI.po
+===================================================================
+--- games-0.6.3/po/fi_FI.po
++++ games-0.6.3/po/fi_FI.po	2008-04-23 23:43:33.000000000 +0300
+@@ -0,0 +1,52 @@
++# VDR games plugin language source file.
++# Copyright (C) YEAR THE VDR-games'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the VDR-games package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: VDR-games\n"
++"Report-Msgid-Bugs-To: http://qa.mandriva.com/\n"
++"POT-Creation-Date: 2008-04-23 23:43+0300\n"
++"PO-Revision-Date: 2008-04-23 23:43+0300\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: <vdr@linuxtv.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=ISO-8859-15\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: plugin.cpp:15
++msgid "OSD Games Collection"
++msgstr "Pelit (OSD)"
++
++#: plugin.cpp:60
++msgid "Games"
++msgstr "Pelit"
++
++#: plugin.cpp:124
++msgid "OSD Size"
++msgstr "Nï¿½ytï¿½n koko"
++
++#: plugin.cpp:125
++msgid "X Position"
++msgstr "Vaakasijainti"
++
++#: plugin.cpp:126
++msgid "Y Position"
++msgstr "Pystysijainti"
++
++#: plugin.cpp:127
++msgid "Computer Skill"
++msgstr "Vaikeustaso"
++
++#: plugin.cpp:128
++msgid "Key Repeat"
++msgstr "Nï¿½ppï¿½imen toisto"
++
++#: plugin.cpp:128
++msgid "Off"
++msgstr "pois"
++
++#: plugin.cpp:128
++msgid "On"
++msgstr "pï¿½ï¿½llï¿½"
+Index: games-0.6.3/po/games.pot
+===================================================================
+--- games-0.6.3/po/games.pot
++++ games-0.6.3/po/games.pot	2008-04-23 23:43:33.000000000 +0300
+@@ -0,0 +1,53 @@
++# SOME DESCRIPTIVE TITLE.
++# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
++# This file is distributed under the same license as the PACKAGE package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
++#
++#, fuzzy
++msgid ""
++msgstr ""
++"Project-Id-Version: PACKAGE VERSION\n"
++"Report-Msgid-Bugs-To: http://qa.mandriva.com/\n"
++"POT-Creation-Date: 2008-04-23 23:43+0300\n"
++"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: LANGUAGE <LL@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=CHARSET\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: plugin.cpp:15
++msgid "OSD Games Collection"
++msgstr ""
++
++#: plugin.cpp:60
++msgid "Games"
++msgstr ""
++
++#: plugin.cpp:124
++msgid "OSD Size"
++msgstr ""
++
++#: plugin.cpp:125
++msgid "X Position"
++msgstr ""
++
++#: plugin.cpp:126
++msgid "Y Position"
++msgstr ""
++
++#: plugin.cpp:127
++msgid "Computer Skill"
++msgstr ""
++
++#: plugin.cpp:128
++msgid "Key Repeat"
++msgstr ""
++
++#: plugin.cpp:128
++msgid "Off"
++msgstr ""
++
++#: plugin.cpp:128
++msgid "On"
++msgstr ""
