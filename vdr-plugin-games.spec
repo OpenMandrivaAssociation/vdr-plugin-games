@@ -10,7 +10,7 @@ Version:	%version
 Release:	%mkrel %rel
 Group:		Video
 License:	GPL+
-URL:		http://1541.org/
+URL:		https://1541.org/
 Source:		http://1541.org/public/vdr-%plugin-%version.tar.bz2
 Patch0:		vdr-games-0.6.2-finnish.diff
 Patch1:		games-02_Makefile-nosilent.dpatch
